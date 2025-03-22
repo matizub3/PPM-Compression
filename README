@@ -2,15 +2,18 @@
  *
  *                     README
  *
- *     Assignment:  arith
- *     Authors:     Mateusz (mzubrz01) & Annica (agrote01)
+ *     Authors:     Mateusz Zubrzycki
  *     Date:        03/07/2025
- *     Course:      CS40
  *
  *
  *
  **************************************************************/
  
+
+Program Description:
+    PPM-Compression provides an open-sourced lossy compressor and 
+    decompressor for PPM images, allowing users to store PPM
+    files using less memory using bitpacking.
 
 Compile and run:
     - Compile using
@@ -37,8 +40,8 @@ Compile and run:
             ./image40 -d
 
 Implementation Architecture:
-    Our implementation relies on a row-major mapping which allows us to
-    process 2x2 blocks in our compression and decompression apply functions.
+    The implementation relies on a row-major mapping which process 
+    2x2 blocks in compression and decompression apply functions.
     To calculate and store necessary values during each compression and
     decompression step, we implemented a struct called Block_Pixel_Info. This
     struct serves as our method for storing any value which relates to the
@@ -93,12 +96,13 @@ Implementation Architecture:
     corresponding RGB values to output a decompressed image.
 
 
-Acknowledgements:
-    - TA's in office hours (THANK YOU <3333!!!!)
-    
-    Darya: Clarification on reading and writing packed codewords
-    Moizes: Clarification on reading and writing codewords in 8 bytes
-    Many more! :D
+Customization of Compression/Decompression:
+   If the user desires, they can compress their image using
+   varying block sizes. For example, a block size of 3 would
+   compress the image using 3x3 blocks. It is a checked runtime error
+   if the image is cannot be evenly divided into blocks of the specified
+   block size.
+
 
 Known bugs:
     - The implementation runs as expected. There are no known bugs.
