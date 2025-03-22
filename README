@@ -1,0 +1,108 @@
+/**************************************************************
+ *
+ *                     README
+ *
+ *     Assignment:  arith
+ *     Authors:     Mateusz (mzubrz01) & Annica (agrote01)
+ *     Date:        03/07/2025
+ *     Course:      CS40
+ *
+ *
+ *
+ **************************************************************/
+ 
+
+Compile and run:
+    - Compile using
+        make
+
+    - Run executable as follows
+
+    To Compress:
+
+        1. A provided file containing a valid PPM image
+            ./image40 inputFile   
+        
+        2. Passing in a valid PPM image to stdin
+            ./image40 < inputFile
+            ./image40
+
+    To Decompress:
+
+        1. A provided file containing a compressed PPM image
+            ./image40 -d  inputFile
+
+        2. Passing in a compressed PPM image to stdin
+            ./image40 -d < inputFile
+            ./image40 -d
+
+Implementation Architecture:
+    Our implementation relies on a row-major mapping which allows us to
+    process 2x2 blocks in our compression and decompression apply functions.
+    To calculate and store necessary values during each compression and
+    decompression step, we implemented a struct called Block_Pixel_Info. This
+    struct serves as our method for storing any value which relates to the
+    entire block. In order to store the Component video values, which
+    are different for every pixel, we implemented a struct called ComponentVideo
+    which stores Y, Pb, and Pr values for a single pixel. Thus, in order to
+    store the component video values for all 4 pixels in the 2x2 block, we
+    house a ComponentVideo struct array with 4 elements inside our
+    Block_Pixel_Info. To visualize this implementation, we present the following
+    definitions for the ComponentVideo and Block_Pixel_Info structs:
+
+    /* struct to hold a pixel's component video color space */
+    typedef struct ComponentVideo{
+            float y;
+            float pb;
+            float pr;
+    } ComponentVideo;
+
+    /* struct to hold the info of a 2x2 pixel block */
+    typedef struct Block_Pixel_Info {
+            ComponentVideo compvidArr[4];
+            float discreteCosineArr[4];
+            int quantized_abcd[4];
+            unsigned pb_chromaIndex;
+            unsigned pr_chromaIndex;
+            float pb_mean;
+            float pr_mean;
+
+    } Block_Pixel_Info;
+
+    To store and write codewords, we implemented a Codeword_Element struct
+    where each Codeword_Element represents a component of the codeword
+    (a, b, c, d, Pb index, Pr index):
+    
+    /* struct to hold codeword things */
+    typedef struct CodeWord_Element {
+        uint64_t value;
+        bool isSigned;
+        unsigned width;
+        unsigned lsb;
+    } CodeWord_Element; 
+    
+    This allows us to define a format to initialize an array of 6 
+    Codeword_Elements (one for each component of a single codeword) to 
+    represent a codeword. This format immediately initializes whether each 
+    component's value is signed or unsigned, its width, and its 
+    least-significant bits, ensuring that our code is modular and any changes
+    can be easily accounted for in the interface as opposed to the 
+    implementation. Using all of these structs in conjunction, we are able
+    to effectively store and calculate all block information needed to go from
+    RGB values to printing codewords and from reading in codewords to updating
+    corresponding RGB values to output a decompressed image.
+
+
+Acknowledgements:
+    - TA's in office hours (THANK YOU <3333!!!!)
+    
+    Darya: Clarification on reading and writing packed codewords
+    Moizes: Clarification on reading and writing codewords in 8 bytes
+    Many more! :D
+
+Known bugs:
+    - The implementation runs as expected. There are no known bugs.
+
+Hours:
+    - 10 hours analyzing problems
+    - 40 Hours solving problems
